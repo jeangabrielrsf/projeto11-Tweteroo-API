@@ -14,7 +14,13 @@ let tweetData = [
 		username: "bobesponja",
 		avatar:
 			"https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info",
-		tweet: "1",
+		tweet: "eu amo o HUB",
+	},
+	{
+		username: "naruto",
+		avatar:
+			"https://i.pinimg.com/736x/74/45/6c/74456c2bd47666329b9dee5dcad4ece7.jpg",
+		tweet: "Jutsu Clone das Sombras",
 	},
 ];
 
@@ -23,26 +29,26 @@ server.use(express.json());
 server.use(cors());
 
 server.post("/sign-up", (request, response) => {
-	console.log("recebi o post da rota /sign-up");
-	console.log(request.body);
 	userData = [...userData, request.body];
-	console.log(userData);
 	response.sendStatus(201);
 });
 
 server.post("/tweets", (request, response) => {
-	console.log("recebi um post na rota /tweets");
-	const userAvatar = userData.find(
-		(item) => request.body.username === item.username
-	);
-	console.log(userAvatar);
-	tweetData = [...tweetData, request.body];
-	console.log(tweetData);
+	const { username, tweet } = request.body;
+	const userInfo = userData.find((item) => item.username === username);
+	const userAvatar = userInfo.avatar;
+	tweetData = [
+		...tweetData,
+		{
+			username,
+			avatar: userAvatar,
+			tweet,
+		},
+	];
 	response.sendStatus(201);
 });
 
 server.get("/tweets", (request, response) => {
-	console.log("recebi um GET na rota /tweets");
 	const lastArray = [];
 	let quantity = tweetData.length;
 	if (quantity > 10) {
