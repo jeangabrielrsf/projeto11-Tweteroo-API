@@ -7,6 +7,11 @@ let userData = [
 		avatar:
 			"https://super.abril.com.br/wp-content/uploads/2020/09/04-09_gato_SITE.jpg?quality=70&strip=info",
 	},
+	{
+		username: "naruto",
+		avatar:
+			"https://i.pinimg.com/736x/74/45/6c/74456c2bd47666329b9dee5dcad4ece7.jpg",
+	},
 ];
 
 let tweetData = [
@@ -29,12 +34,25 @@ server.use(express.json());
 server.use(cors());
 
 server.post("/sign-up", (request, response) => {
-	userData = [...userData, request.body];
+	const { username, avatar } = request.body;
+	if (!username || !avatar) {
+		return response.status(400).send("Todos os campos são obrigatórios!");
+	}
+	userData = [
+		...userData,
+		{
+			username,
+			avatar,
+		},
+	];
 	response.sendStatus(201);
 });
 
 server.post("/tweets", (request, response) => {
 	const { username, tweet } = request.body;
+	if (!username || !tweet) {
+		return response.status(400).send("Todos os campos são obrigatórios!");
+	}
 	const userInfo = userData.find((item) => item.username === username);
 	const userAvatar = userInfo.avatar;
 	tweetData = [
